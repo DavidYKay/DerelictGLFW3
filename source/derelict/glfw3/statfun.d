@@ -123,6 +123,8 @@ extern(C) @nogc nothrow {
     int glfwExtensionSupported(const(char)*);
     GLFWglproc glfwGetProcAddress(const(char)*);
     int glfwVulkanSupported();
+    Display* glfwGetX11Display;
+    Window da_glfwGetX11Window (GLFWwindow*);
 }
 
 // Mixins to allow linking with Vulkan & OS native functions using the

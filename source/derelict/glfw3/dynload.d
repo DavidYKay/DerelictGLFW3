@@ -150,6 +150,13 @@ extern(C) @nogc nothrow {
     alias da_glfwExtensionSupported = int function(const(char)*);
     alias da_glfwGetProcAddress = GLFWglproc function(const(char)*);
     alias da_glfwVulkanSupported = int function();
+
+    alias da_glfwGetX11Display = Display* function();
+    alias da_glfwGetX11Window = Window function(GLFWwindow*);
+    //alias da_glfwGetX11Adapter = RRCrtc function(GLFWmonitor*);
+    //alias da_glfwGetX11Monitor = RROutput function(GLFWmonitor*);
+    //alias da_glfwGetGLXContext = GLXContext function(GLFWwindow*);
+    //alias da_glfwGetGLXWindow = GLXWindow function(GLFWwindow*);
 }
 
 __gshared {
@@ -244,6 +251,10 @@ __gshared {
     da_glfwExtensionSupported glfwExtensionSupported;
     da_glfwGetProcAddress glfwGetProcAddress;
     da_glfwVulkanSupported glfwVulkanSupported;
+
+    da_glfwGetX11Display glfwGetX11Display;
+    da_glfwGetX11Monitor glfwGetX11Monitor;
+
 }
 
 class DerelictGLFW3Loader : SharedLibLoader {
@@ -348,6 +359,10 @@ class DerelictGLFW3Loader : SharedLibLoader {
         bindFunc(cast(void**)&glfwExtensionSupported,"glfwExtensionSupported");
         bindFunc(cast(void**)&glfwGetProcAddress,"glfwGetProcAddress");
         bindFunc(cast(void**)&glfwVulkanSupported, "glfwVulkanSupported");
+
+
+        bindFunc(cast(void**)&glfwGetX11Display, "glfwGetX11Display");
+        bindFunc(cast(void**)&glfwGetX11Window, "glfwGetX11Window");
     }
 }
 
@@ -464,18 +479,16 @@ else static if(Derelict_OS_Windows) {
 else static if(Derelict_OS_Posix) {
     mixin template DerelictGLFW3_X11Bind() {
         extern(C) @nogc nothrow {
-            alias da_glfwGetX11Display = Display* function();
+            //alias da_glfwGetX11Display = Display* function();
+            //alias da_glfwGetX11Window = Window function(GLFWwindow*);
             alias da_glfwGetX11Adapter = RRCrtc function(GLFWmonitor*);
             alias da_glfwGetX11Monitor = RROutput function(GLFWmonitor*);
-            alias da_glfwGetX11Window = Window function(GLFWwindow*);
             alias da_glfwGetGLXContext = GLXContext function(GLFWwindow*);
             alias da_glfwGetGLXWindow = GLXWindow function(GLFWwindow*);
         }
 
         __gshared {
-            da_glfwGetX11Display glfwGetX11Display;
             da_glfwGetX11Adapter glfwGetX11Adapter;
-            da_glfwGetX11Monitor glfwGetX11Monitor;
             da_glfwGetX11Window glfwGetX11Window;
             da_glfwGetGLXContext glfwGetGLXContext;
             da_glfwGetGLXWindow glfwGetGLXWindow;
@@ -485,10 +498,10 @@ else static if(Derelict_OS_Posix) {
             assert(DerelictGLFW3.isLoaded);
 
             with(DerelictGLFW3) {
-                bindMixedFunc(cast(void**)&glfwGetX11Display, "glfwGetX11Display");
+                //bindMixedFunc(cast(void**)&glfwGetX11Display, "glfwGetX11Display");
+                //bindMixedFunc(cast(void**)&glfwGetX11Window,"glfwGetX11Window");
                 bindMixedFunc(cast(void**)&glfwGetX11Adapter, "glfwGetX11Adapter");
                 bindMixedFunc(cast(void**)&glfwGetX11Monitor,"glfwGetX11Monitor");
-                bindMixedFunc(cast(void**)&glfwGetX11Window,"glfwGetX11Window");
                 bindMixedFunc(cast(void**)&glfwGetGLXContext, "glfwGetGLXContext");
                 bindMixedFunc(cast(void**)&glfwGetGLXWindow, "glfwGetGLXWindow");
             }
